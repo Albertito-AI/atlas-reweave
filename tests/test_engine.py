@@ -7,6 +7,7 @@ the crash fixture. Assertions target public outcomes, not internal call graphs.
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
+from contextlib import closing
 from dataclasses import replace
 from pathlib import Path
 import sqlite3
@@ -254,8 +255,9 @@ class EngineContractTests(unittest.TestCase):
                 stage = self.stage(produce, verify)
                 with Engine(path, [stage]) as engine:
                     receipt = engine.run("sample", 7)
-                with sqlite3.connect(path) as database:
-                    database.execute(f"UPDATE {table} SET {column} = ?", (replacement,))
+                with closing(sqlite3.connect(path)) as database:
+                    with database:
+                        database.execute(f"UPDATE {table} SET {column} = ?", (replacement,))
                 with Engine(path, [stage]) as engine:
                     self.assert_hidden(engine.revalidate(receipt.work_key), "corrupt")
                     self.assert_hidden(engine.run("sample", 7), "corrupt")

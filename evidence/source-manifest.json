@@ -21,9 +21,9 @@
       "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
     },
     {
-      "bytes": 12804,
+      "bytes": 12877,
       "path": "src/reweave/benchmark.py",
-      "sha256": "eeb664de818b8c0c3846ac3ccfcece822625fc694a3286c385ac23fbdf6f2a11"
+      "sha256": "4d559908d02200904cb26752930f7b2eb233294cca121f4ef0e2bb6b8adb2cde"
     },
     {
       "bytes": 6008,
@@ -71,9 +71,9 @@
       "sha256": "b84d2ec612fc741fad56ecdac4fd206328b7e8592c73d2bdfe9c84a9b68c5209"
     },
     {
-      "bytes": 28152,
+      "bytes": 28231,
       "path": "tests/test_engine.py",
-      "sha256": "91456bf779676cdab78d08f0c4102246075c7fee1e08f1574b131db7afdd762c"
+      "sha256": "829cd446b220659d785060c3c9489b5286aaf8fd087fb9a7f7e23cbe8f5dbf50"
     },
     {
       "bytes": 7482,
@@ -91,9 +91,9 @@
       "sha256": "56c83b54903c29f618e8310effba2bb21bb72110c2a6fcedd61a35503ebaae5d"
     },
     {
-      "bytes": 25149,
+      "bytes": 26340,
       "path": "tests/test_store.py",
-      "sha256": "3415aa44c0e88de59317700968cc9c4d894a98413f96517ae52278fb4a141ead"
+      "sha256": "10b4918d68b60820fb954477d6a65ae1b17a46e6158c95deba7487877a8cab01"
     }
   ],
   "schema": "reweave.source-manifest.v1",

@@ -105,7 +105,7 @@
     }
   },
   "source": {
-    "benchmark_sha256": "eeb664de818b8c0c3846ac3ccfcece822625fc694a3286c385ac23fbdf6f2a11",
+    "benchmark_sha256": "4d559908d02200904cb26752930f7b2eb233294cca121f4ef0e2bb6b8adb2cde",
     "examples_sha256": "4503a44411c466ded149797fb7d0167e3333c367ab8d15be4bef3d411e49dff9"
   },
   "strategies": {

@@ -1,12 +1,12 @@
 """Deterministic storage fixtures, including real subprocess crash/lock checks."""
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from copy import deepcopy
 from dataclasses import replace
 import json
 import os
 from pathlib import Path
-import selectors
 import sqlite3
 import subprocess
 import sys
@@ -188,7 +188,7 @@ class StoreTests(unittest.TestCase):
                 store.reserve_attempt(work(4)["work_key"])
             self.assertEqual(store.stats()["attempts_total"], 3)
             self.assertEqual(store.stats()["works"], 1)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             self.assertIn("Encoded JSON exceeds", db.execute(
                 "SELECT error FROM attempts WHERE attempt_id=?", (second,)
             ).fetchone()[0])
@@ -294,7 +294,7 @@ class StoreTests(unittest.TestCase):
             attempt = store.reserve_attempt(work()["work_key"])
             store.finish_attempt(attempt, error="é" * 10_000)
             store.finish_attempt(attempt, error="replacement is ignored")
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             error = db.execute("SELECT error FROM attempts").fetchone()[0]
         self.assertLessEqual(len(error.encode("utf-8")), 4_096)
         self.assertTrue(error.endswith(" [truncated]"))
@@ -305,7 +305,7 @@ class StoreTests(unittest.TestCase):
         with Store(self.path, self.limits) as store:
             persist(store, record)
         replacement = {"fixture": "changed"}
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("UPDATE works SET output=?, output_digest=?", (canonical(replacement), digest(replacement)))
         with Store(self.path, self.limits) as store:
             with self.assertRaisesRegex(StoreCorrupt, "Complete work record"):
@@ -320,7 +320,7 @@ class StoreTests(unittest.TestCase):
             store.put_judgement(decision)
         changed = deepcopy(decision["verdict"])
         changed["accepted"] = False
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("UPDATE judgements SET verdict=?", (canonical(changed),))
         with Store(self.path, self.limits) as store:
             with self.assertRaisesRegex(StoreCorrupt, "Complete judgement record"):
@@ -332,7 +332,7 @@ class StoreTests(unittest.TestCase):
             record = work()
             with Store(path, self.limits) as store:
                 persist(store, record)
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.execute("UPDATE works SET output=?", (corrupt,))
             with Store(path, self.limits) as store:
                 with self.subTest(corrupt=corrupt), self.assertRaises(StoreCorrupt):
@@ -341,31 +341,31 @@ class StoreTests(unittest.TestCase):
     def test_attempt_history_deletion_cannot_reset_durable_counter(self):
         with Store(self.path, self.limits) as store:
             store.finish_attempt(store.reserve_attempt(work()["work_key"]), error="Fixture failure")
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("DELETE FROM attempts")
         with self.assertRaisesRegex(StoreCorrupt, "counter does not match"):
             Store(self.path, self.limits)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             self.assertEqual(db.execute("SELECT producer_calls FROM state").fetchone()[0], 1)
 
     def test_unknown_version_and_foreign_database_are_never_reset(self):
         with Store(self.path, self.limits) as store:
             persist(store, work())
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("PRAGMA user_version=99")
         for _ in range(2):
             with self.assertRaisesRegex(StoreCorrupt, "Unsupported store schema"):
                 Store(self.path, self.limits)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             self.assertEqual(db.execute("PRAGMA user_version").fetchone()[0], 99)
             self.assertEqual(db.execute("SELECT count(*) FROM works").fetchone()[0], 1)
         foreign = self.path.with_name("foreign.sqlite3")
-        with sqlite3.connect(foreign) as db:
+        with closing(sqlite3.connect(foreign)) as db, db:
             db.execute("CREATE TABLE unrelated (value TEXT)")
             db.execute("INSERT INTO unrelated VALUES ('retain me')")
         with self.assertRaises(StoreCorrupt):
             Store(foreign, self.limits)
-        with sqlite3.connect(foreign) as db:
+        with closing(sqlite3.connect(foreign)) as db, db:
             self.assertEqual(db.execute("SELECT value FROM unrelated").fetchone()[0], "retain me")
 
     def test_non_database_file_is_not_replaced(self):
@@ -376,26 +376,26 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(self.path.read_bytes(), content)
 
     def test_view_only_foreign_database_is_not_treated_as_empty(self):
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("CREATE VIEW existing_evidence AS SELECT 'retain me' AS value")
         with self.assertRaises(StoreCorrupt):
             Store(self.path, self.limits)
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             self.assertEqual(db.execute("SELECT value FROM existing_evidence").fetchone()[0], "retain me")
             self.assertEqual(db.execute("PRAGMA user_version").fetchone()[0], 0)
         foreign_id = self.path.with_name("foreign-application.sqlite3")
-        with sqlite3.connect(foreign_id) as db:
+        with closing(sqlite3.connect(foreign_id)) as db, db:
             db.execute("PRAGMA application_id=123")
         with self.assertRaises(StoreCorrupt):
             Store(foreign_id, self.limits)
-        with sqlite3.connect(foreign_id) as db:
+        with closing(sqlite3.connect(foreign_id)) as db, db:
             self.assertEqual(db.execute("PRAGMA application_id").fetchone()[0], 123)
             self.assertEqual(db.execute("SELECT count(*) FROM sqlite_master").fetchone()[0], 0)
 
     def test_store_column_constraints_are_part_of_versioned_schema(self):
         with Store(self.path, self.limits):
             pass
-        with sqlite3.connect(self.path) as db:
+        with closing(sqlite3.connect(self.path)) as db, db:
             db.execute("DROP TABLE judgements")
             db.execute("CREATE TABLE judgements (judgement_key TEXT PRIMARY KEY, context TEXT, "
                        "verdict TEXT, record_digest TEXT, created_at TEXT)")
@@ -466,21 +466,46 @@ sys.stdin.read()
             env=self._environment(), cwd=self.temp.name,
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
         )
+        ready = threading.Event()
+        readiness = []
+
+        def read_ready_line():
+            try:
+                readiness.append(process.stdout.readline())
+            except Exception as exc:
+                readiness.append(exc)
+            finally:
+                ready.set()
+
+        reader = threading.Thread(target=read_ready_line, daemon=True)
+        reader.start()
         try:
-            with selectors.DefaultSelector() as selector:
-                selector.register(process.stdout, selectors.EVENT_READ)
-                self.assertTrue(selector.select(timeout=15), "Crash fixture did not become ready")
-            before = json.loads(process.stdout.readline())
+            self.assertTrue(ready.wait(timeout=15), "Crash fixture did not become ready")
+            if isinstance(readiness[0], Exception):
+                raise readiness[0]
+            if not readiness[0]:
+                process.wait(timeout=15)
+                self.fail("Crash fixture exited before readiness: " + process.stderr.read())
+            before = json.loads(readiness[0])
             self.assertEqual(before["attempts_running"], 1)
             self.assertEqual(before["attempts_total"], 2)
             with self.assertRaises(StoreBusy):
                 Store(self.path, self.limits)
             process.kill()
-            process.communicate(timeout=15)
         finally:
             if process.poll() is None:
                 process.kill()
+            process.wait(timeout=15)
+            reader.join(timeout=15)
+            # The child has exited, so its pipe reaches EOF even when readiness
+            # timed out. Do not race communicate() against a live stdout reader.
+            try:
+                self.assertFalse(reader.is_alive(), "Crash-fixture readiness reader did not stop")
                 process.communicate(timeout=15)
+            finally:
+                for pipe in (process.stdin, process.stdout, process.stderr):
+                    if pipe is not None:
+                        pipe.close()
         limits = replace(self.limits, max_works=3, max_producer_calls=3)
         with Store(self.path, limits) as store:
             self.assertEqual(store.get_work(completed["work_key"]), completed)

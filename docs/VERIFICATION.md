@@ -4,7 +4,7 @@ Date: 11 November 2026. Source distribution: **0.1.0a1**.
 
 ## Local installed-package evidence
 
-The final local gates ran on Python **3.12.14**, Linux, after the independent
+The revised-core local gates ran on Python **3.12.14**, Linux, after the independent
 review fixes described below. They executed the actual Python orchestration from
 [verify.yml](../.github/workflows/verify.yml), rather than a separate abbreviated
 installation procedure.
@@ -22,7 +22,7 @@ installation procedure.
 | Actual installed benchmark | All three callback-count pairs, output/status agreement, workload digest and input digest matched committed evidence |
 | Packaged implementation | All 11 Python modules in the wheel matched the source bytes |
 
-The final revised-core gates completed at **07:18:41 UTC**. The optional adapter
+Those revised-core gates completed at **07:18:41 UTC**. The optional adapter
 tests exercise real child processes through stdio, including automatic and legacy
 protocol negotiation, all four tools, duplicate reuse, restart with changed
 policy, blocked cached descendants and invalid tool arguments. Missing-SDK
@@ -106,6 +106,21 @@ claim an unobserved hosted result. The repository's
 [Actions history](https://github.com/Albertito-AI/atlas-reweave/actions) and the
 source-revision-specific PR/merge receipt establish hosted outcomes when those
 runs complete. Artifacts retain distribution candidates and actual CLI reports.
+
+The first hosted run at `493bb53bdbe066db85b3b539f75ccdc66b065617`
+passed both Linux jobs and MCP, but exposed Windows portability defects.
+[Failed run 42978990265](https://github.com/Albertito-AI/atlas-reweave/actions/runs/42978990265)
+is retained. A SQLite connection's transaction context had been mistaken for
+connection closure in disposable fixtures, and the crash-test readiness gate
+used a selector on a subprocess pipe. Windows rejected deletion of the still-open
+files and did not support that selector operation.
+
+The benchmark and tests now explicitly close those connections after committing
+their transactions, and readiness uses a bounded reader thread with deterministic
+process/pipe cleanup. The original assertions and mandatory Windows job remain.
+The benchmark receipt was regenerated from an actual run with its new source
+hash; all measured counts and acceptance results were unchanged. The subsequent
+exact-source workflow establishes whether the Windows repair passes.
 
 No outside contributor, independent user, live-model result or production
 security review is asserted by these local and hosted software checks.

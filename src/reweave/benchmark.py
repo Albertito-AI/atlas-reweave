@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from contextlib import closing
 from dataclasses import replace
 from hashlib import sha256
 import json
@@ -155,9 +156,10 @@ def _safety_examples(directory: Path) -> dict:
             raise AssertionError("Initial corruption fixture did not accept")
     # Deliberate alteration of our closed, disposable fixture only. Do not update
     # either output_digest or record_digest; this tests detection, not repair.
-    with sqlite3.connect(corrupt_path) as connection:
-        connection.execute("UPDATE works SET output = ? WHERE work_key = ?",
-                           (canonical({"solution": [999, 999]}), original.work_key))
+    with closing(sqlite3.connect(corrupt_path)) as connection:
+        with connection:
+            connection.execute("UPDATE works SET output = ? WHERE work_key = ?",
+                               (canonical({"solution": [999, 999]}), original.work_key))
     corrupt_calls = _Calls()
     with Engine(corrupt_path, _stages(False, False, corrupt_calls), scope="corruption-fixture") as engine:
         corrupted = engine.revalidate(original.work_key)
