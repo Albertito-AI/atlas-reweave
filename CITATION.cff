@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "Cite the exact source revision used, together with the software version."
+title: "Atlas Reweave: durable computation with versioned acceptance"
+type: software
+authors:
+  - family-names: Tan
+    given-names: Albert Sin Hon
+version: 0.1.0a1
+license: MIT
+repository-code: "https://github.com/Albertito-AI/atlas-reweave"
+url: "https://github.com/Albertito-AI/atlas-reweave"
+abstract: >-
+  A local Python execution library separating immutable work from versioned
+  acceptance, with dependency revalidation, bounded streaming, durable producer
+  attempt accounting and an optional MCP interface. Its examples and benchmarks
+  are deterministic software fixtures, not evidence of model learning.

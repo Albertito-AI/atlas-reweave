@@ -1,0 +1,101 @@
+{
+  "files": [
+    {
+      "bytes": 7976,
+      "path": ".github/workflows/verify.yml",
+      "sha256": "c49d2b8992b5f75fa1f057c0b68837339955882d4b925c639fc9f92c48cb388b"
+    },
+    {
+      "bytes": 807,
+      "path": "pyproject.toml",
+      "sha256": "3999e99c8f9aa8875002e1e791d666dbc968988e100c4d58cb652fe9a6a4572c"
+    },
+    {
+      "bytes": 496,
+      "path": "src/reweave/__init__.py",
+      "sha256": "91f2f5f7e345667837792d01fbb7622c6b1bfde46d448a756532d64a80581263"
+    },
+    {
+      "bytes": 48,
+      "path": "src/reweave/__main__.py",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "bytes": 12804,
+      "path": "src/reweave/benchmark.py",
+      "sha256": "eeb664de818b8c0c3846ac3ccfcece822625fc694a3286c385ac23fbdf6f2a11"
+    },
+    {
+      "bytes": 6008,
+      "path": "src/reweave/bundle.py",
+      "sha256": "6c3b9e852c59f5809ecefb803cf6c2765dbb173891376dc1af57957d293383c3"
+    },
+    {
+      "bytes": 3605,
+      "path": "src/reweave/cli.py",
+      "sha256": "7b065c6ad27d1fdd989d2874edd999e2722bf022ccb251db87e2b288204144c0"
+    },
+    {
+      "bytes": 4984,
+      "path": "src/reweave/codec.py",
+      "sha256": "b5a759f61dd7d6708850c462ee4f3b952907328eebb8da400eb4a49baab7c77c"
+    },
+    {
+      "bytes": 22276,
+      "path": "src/reweave/engine.py",
+      "sha256": "5cf45e42f6d0df6f5859fc213c7a9d332e023c81bdab0c1111fa1b4df13b8a94"
+    },
+    {
+      "bytes": 13436,
+      "path": "src/reweave/examples.py",
+      "sha256": "4503a44411c466ded149797fb7d0167e3333c367ab8d15be4bef3d411e49dff9"
+    },
+    {
+      "bytes": 5077,
+      "path": "src/reweave/mcp_server.py",
+      "sha256": "8cd249a1a5ad915a3be4426397b207cf77cb5bfacf69e0876f35c0f7e5cb7d97"
+    },
+    {
+      "bytes": 25572,
+      "path": "src/reweave/store.py",
+      "sha256": "f3a7719dec23204e586e16c6a8b515235631a0aa5b637c1b2b7a11695c712f52"
+    },
+    {
+      "bytes": 3010,
+      "path": "src/reweave/types.py",
+      "sha256": "868c127a5b7035238c9387e3897caf628325eb3972acaa235b06dbe6c3addf8e"
+    },
+    {
+      "bytes": 5841,
+      "path": "tests/test_codec.py",
+      "sha256": "b84d2ec612fc741fad56ecdac4fd206328b7e8592c73d2bdfe9c84a9b68c5209"
+    },
+    {
+      "bytes": 28152,
+      "path": "tests/test_engine.py",
+      "sha256": "91456bf779676cdab78d08f0c4102246075c7fee1e08f1574b131db7afdd762c"
+    },
+    {
+      "bytes": 7482,
+      "path": "tests/test_examples.py",
+      "sha256": "02fa46acba0fb52ef16903acd20c13320b97b090eb72b1bc4a09958bb0f7bc7e"
+    },
+    {
+      "bytes": 7867,
+      "path": "tests/test_mcp.py",
+      "sha256": "b8bc0ade559ace0326065974ca750fc2416b6504cd400d469ed6ee9932d66f17"
+    },
+    {
+      "bytes": 8596,
+      "path": "tests/test_review_regressions.py",
+      "sha256": "56c83b54903c29f618e8310effba2bb21bb72110c2a6fcedd61a35503ebaae5d"
+    },
+    {
+      "bytes": 25149,
+      "path": "tests/test_store.py",
+      "sha256": "3415aa44c0e88de59317700968cc9c4d894a98413f96517ae52278fb4a141ead"
+    }
+  ],
+  "schema": "reweave.source-manifest.v1",
+  "scope": "Python implementation, tests, package metadata and CI workflow; documentation and this manifest are excluded"
+}

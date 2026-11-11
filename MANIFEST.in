@@ -1,0 +1,5 @@
+include AGENTS.md LICENSE README.md CONTRIBUTING.md SECURITY.md CITATION.cff pyproject.toml
+recursive-include .github *.md *.yml
+recursive-include docs *.md *.json
+recursive-include tests *.py
+recursive-include evidence *.json
