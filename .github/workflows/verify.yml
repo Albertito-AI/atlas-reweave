@@ -1,0 +1,154 @@
+name: Verify installed package
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: Core / ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.11'
+          - os: ubuntu-latest
+            python: '3.12'
+          - os: windows-latest
+            python: '3.12'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install build frontend
+        run: python -m pip install --disable-pip-version-check build==1.6.1
+      - name: Build sdist and wheel from sdist
+        run: python -m build
+      - name: Test the installed wheel outside the checkout
+        shell: python
+        run: |
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import tempfile
+          import venv
+
+          checkout = Path(os.environ['GITHUB_WORKSPACE']).resolve()
+          wheels = list((checkout / 'dist').glob('*.whl'))
+          assert len(wheels) == 1, wheels
+          environment = os.environ.copy()
+          environment.pop('PYTHONPATH', None)
+          environment.pop('PYTHONHOME', None)
+          environment['PYTHONNOUSERSITE'] = '1'
+          with tempfile.TemporaryDirectory(prefix='reweave-core-', dir=os.environ['RUNNER_TEMP']) as temporary:
+              root = Path(temporary)
+              venv.EnvBuilder(with_pip=True).create(root / 'venv')
+              binaries = root / 'venv' / ('Scripts' if os.name == 'nt' else 'bin')
+              python = binaries / ('python.exe' if os.name == 'nt' else 'python')
+              working = root / 'outside-checkout'
+              working.mkdir()
+              def run(*arguments):
+                  subprocess.run([str(python), *map(str, arguments)], cwd=working, env=environment, check=True, timeout=120)
+              run('-m', 'pip', 'install', '--no-index', '--no-deps', wheels[0])
+              run('-c', "import importlib.metadata as m, importlib.util, pathlib, reweave, sys; p=pathlib.Path(reweave.__file__).resolve(); assert not p.is_relative_to(pathlib.Path(sys.argv[1]).resolve()), p; assert m.version('atlas-reweave') == '0.1.0a1'; assert all('extra ==' in r for r in (m.requires('atlas-reweave') or [])); assert importlib.util.find_spec('mcp') is None; print('Installed package:', p)", checkout)
+              run('-m', 'unittest', 'discover', '-s', checkout / 'tests', '-p', 'test_*.py', '-v')
+              run('-m', 'pip', 'check')
+              command = binaries / ('reweave.exe' if os.name == 'nt' else 'reweave')
+              subprocess.run([str(command), '--help'], cwd=working, env=environment, check=True, timeout=15)
+              reports = Path(os.environ['RUNNER_TEMP']) / 'reweave-reports'
+              reports.mkdir(exist_ok=True)
+              observed = {}
+              for name, arguments in (
+                  ('demo', ['demo', '--store', str(working / 'demo.sqlite')]),
+                  ('benchmark', ['benchmark']),
+              ):
+                  completed = subprocess.run([str(command), *arguments], cwd=working, env=environment, capture_output=True, text=True, encoding='utf-8', check=True, timeout=120)
+                  (reports / (name + '.json')).write_text(completed.stdout, encoding='utf-8')
+                  observed[name] = json.loads(completed.stdout)
+              demo = observed['demo']
+              assert demo['fixture_only'] is True
+              assert set(demo['receipts']) == {'integer', 'rational', 'aggregate', 'excerpt'}
+              assert all(receipt['status'] == 'accepted' for receipt in demo['receipts'].values())
+              actual = observed['benchmark']
+              expected = json.loads((checkout / 'evidence' / 'benchmark.json').read_text(encoding='utf-8'))
+              def counts(report):
+                  return {name: (value['producer_calls'], value['verifier_calls']) for name, value in report['strategies'].items()}
+              def stable_digest(value):
+                  encoded = json.dumps(value, ensure_ascii=False, allow_nan=False, sort_keys=True, separators=(',', ':'))
+                  return hashlib.sha256(encoded.encode('utf-8')).hexdigest()
+              assert actual['schema'] == expected['schema'] == 'reweave.benchmark.v1'
+              assert actual['fixture_only'] is expected['fixture_only'] is True
+              assert counts(actual) == counts(expected), (counts(actual), counts(expected))
+              assert actual['same_statuses_and_accepted_outputs'] is expected['same_statuses_and_accepted_outputs'] is True
+              assert actual['request_count_per_strategy'] == expected['request_count_per_strategy']
+              for field in ('workload', 'inputs'):
+                  assert stable_digest(actual[field]) == stable_digest(expected[field]), field
+              print('Measured callback counts match committed evidence:', counts(actual))
+              print('Workload digest:', stable_digest(actual['workload']))
+              print('Input digest:', stable_digest(actual['inputs']))
+      - name: Retain reviewed distribution candidates
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.12'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: atlas-reweave-distributions-and-reports
+          path: |
+            dist/*
+            ${{ runner.temp }}/reweave-reports/*.json
+          if-no-files-found: error
+          retention-days: 7
+
+  optional-mcp:
+    name: Optional MCP 2.3.0 / real stdio
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install build frontend
+        run: python -m pip install --disable-pip-version-check build==1.6.1
+      - name: Build distributions
+        run: python -m build
+      - name: Test the installed optional adapter through stdio
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+          import subprocess
+          import tempfile
+          import venv
+
+          checkout = Path(os.environ['GITHUB_WORKSPACE']).resolve()
+          wheels = list((checkout / 'dist').glob('*.whl'))
+          assert len(wheels) == 1, wheels
+          environment = os.environ.copy()
+          environment.pop('PYTHONPATH', None)
+          environment.pop('PYTHONHOME', None)
+          environment['PYTHONNOUSERSITE'] = '1'
+          with tempfile.TemporaryDirectory(prefix='reweave-mcp-', dir=os.environ['RUNNER_TEMP']) as temporary:
+              root = Path(temporary)
+              venv.EnvBuilder(with_pip=True).create(root / 'venv')
+              python = root / 'venv' / 'bin' / 'python'
+              working = root / 'outside-checkout'
+              working.mkdir()
+              def run(*arguments):
+                  subprocess.run([str(python), *map(str, arguments)], cwd=working, env=environment, check=True, timeout=180)
+              run('-m', 'pip', 'install', '--disable-pip-version-check', str(wheels[0]) + '[mcp]')
+              run('-c', "import importlib.metadata as m, pathlib, reweave, sys; assert m.version('mcp') == '2.3.0'; assert not pathlib.Path(reweave.__file__).resolve().is_relative_to(pathlib.Path(sys.argv[1]).resolve())", checkout)
+              run('-m', 'unittest', 'discover', '-s', checkout / 'tests', '-p', 'test_mcp.py', '-v')
+              run('-m', 'pip', 'check')

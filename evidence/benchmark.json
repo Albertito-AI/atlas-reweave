@@ -1,0 +1,1484 @@
+{
+  "fixture_only": true,
+  "inputs": {
+    "changed_input": {
+      "matrix": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "rhs": [
+        7,
+        2
+      ]
+    },
+    "integer": {
+      "matrix": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "rhs": [
+        5,
+        1
+      ]
+    },
+    "rational": {
+      "matrix": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "rhs": [
+        1,
+        0
+      ]
+    }
+  },
+  "limitations": [
+    "A small, selected, deterministic workload; not a general performance or efficiency benchmark.",
+    "The policy-invalidated baseline persists decided results across processes and deliberately includes policy in its cache key.",
+    "Each phase starts a new interpreter; crashes and concurrency are separate core tests.",
+    "Producer change selects a different implemented solver and revision; input change separately alters the right-hand side.",
+    "No model calls, tokens, expenditure, learning outcome or novelty result was measured.",
+    "Corruption detection does not establish resistance to a writer who can rewrite all records and hashes."
+  ],
+  "measurement": "Actual producer and verifier callback invocations; no timing, token or monetary estimate",
+  "python": "3.12.14",
+  "request_count_per_strategy": 16,
+  "same_statuses_and_accepted_outputs": true,
+  "schema": "reweave.benchmark.v1",
+  "separate_safety_examples": {
+    "corruption": {
+      "alteration": "Changed stored output without recomputing its digests",
+      "current_receipt": {
+        "generation_reused": false,
+        "judgement_key": null,
+        "reason": "StoreCorrupt: Output digest does not match output",
+        "status": "corrupt",
+        "verification_reused": false,
+        "work_key": "025457aeba522ca5005d2c820ad5d2a0e9c0304eb49c3914b7acc20f458c6f04"
+      },
+      "producer_calls": 0,
+      "verifier_calls": 0
+    },
+    "rejected_parent_cached_child": {
+      "callback_events": [
+        {
+          "callback": "verifier",
+          "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+          "stage": "linear.solve"
+        },
+        {
+          "callback": "verifier",
+          "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+          "stage": "linear.solve"
+        }
+      ],
+      "current_receipt": {
+        "generation_reused": true,
+        "judgement_key": null,
+        "reason": "Parent 4645c69194d15113138d30867e0736d4c87b7c0d044005f12d6b202c0db71fd1 is rejected: Exact solution does not satisfy the integer-only acceptance policy",
+        "status": "blocked",
+        "verification_reused": false,
+        "work_key": "c0cf5019b5857f559d51b2d2aefb7d7b3e97de9076ddb559166e31969da1b8ad"
+      },
+      "export_refused": true,
+      "initial_status": "accepted",
+      "producer_calls": 0,
+      "verifier_calls": 2
+    }
+  },
+  "source": {
+    "benchmark_sha256": "4d559908d02200904cb26752930f7b2eb233294cca121f4ef0e2bb6b8adb2cde",
+    "examples_sha256": "4503a44411c466ded149797fb7d0167e3333c367ab8d15be4bef3d411e49dff9"
+  },
+  "strategies": {
+    "cache_invalidated_by_policy": {
+      "phases": [
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "initial_duplicates",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [],
+          "engine_stats": null,
+          "phase": "process_restart",
+          "producer_calls": 0,
+          "requests": [
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            }
+          ],
+          "verifier_calls": 0
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "integer_only_policy",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": true,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "producer_implementation_change",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "206ca3122cdb9737fecffe2f0f50756a26265835b6ede7292488701f54949cb4"
+            },
+            {
+              "generation_reused": false,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "e71bf20f28fbcf66987fd917bf0ec5ac68b05729f165bd9cf01354e814f49dd1"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "changed_equation_input",
+          "producer_calls": 1,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 3
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "changed_input",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "1863f213d5d2f4d38e6b68ff0d109ca757b57cf8532702a1eb37fd2588b3a07a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 3
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "changed_input",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "1863f213d5d2f4d38e6b68ff0d109ca757b57cf8532702a1eb37fd2588b3a07a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "206ca3122cdb9737fecffe2f0f50756a26265835b6ede7292488701f54949cb4"
+            }
+          ],
+          "verifier_calls": 1
+        }
+      ],
+      "processes_started": 5,
+      "producer_calls": 7,
+      "verifier_calls": 7
+    },
+    "no_cache": {
+      "phases": [
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "initial_duplicates",
+          "producer_calls": 5,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            }
+          ],
+          "verifier_calls": 5
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "process_restart",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "integer_only_policy",
+          "producer_calls": 4,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            }
+          ],
+          "verifier_calls": 4
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "producer_implementation_change",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "206ca3122cdb9737fecffe2f0f50756a26265835b6ede7292488701f54949cb4"
+            },
+            {
+              "generation_reused": false,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "e71bf20f28fbcf66987fd917bf0ec5ac68b05729f165bd9cf01354e814f49dd1"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": null,
+          "phase": "changed_equation_input",
+          "producer_calls": 3,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 3
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "changed_input",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "1863f213d5d2f4d38e6b68ff0d109ca757b57cf8532702a1eb37fd2588b3a07a"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 3
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "changed_input",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "1863f213d5d2f4d38e6b68ff0d109ca757b57cf8532702a1eb37fd2588b3a07a"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "206ca3122cdb9737fecffe2f0f50756a26265835b6ede7292488701f54949cb4"
+            }
+          ],
+          "verifier_calls": 3
+        }
+      ],
+      "processes_started": 5,
+      "producer_calls": 16,
+      "verifier_calls": 16
+    },
+    "reweave": {
+      "phases": [
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": {
+            "attempts_failed": 0,
+            "attempts_interrupted": 0,
+            "attempts_running": 0,
+            "attempts_total": 2,
+            "judgement_hits": 3,
+            "judgements": 2,
+            "producer_calls": 2,
+            "verifier_calls": 2,
+            "work_hits": 3,
+            "works": 2
+          },
+          "phase": "initial_duplicates",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [],
+          "engine_stats": {
+            "attempts_failed": 0,
+            "attempts_interrupted": 0,
+            "attempts_running": 0,
+            "attempts_total": 2,
+            "judgement_hits": 2,
+            "judgements": 2,
+            "producer_calls": 0,
+            "verifier_calls": 0,
+            "work_hits": 2,
+            "works": 2
+          },
+          "phase": "process_restart",
+          "producer_calls": 0,
+          "requests": [
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  },
+                  {
+                    "denominator": 3,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "rational",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            }
+          ],
+          "verifier_calls": 0
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": {
+            "attempts_failed": 0,
+            "attempts_interrupted": 0,
+            "attempts_running": 0,
+            "attempts_total": 2,
+            "judgement_hits": 2,
+            "judgements": 4,
+            "producer_calls": 0,
+            "verifier_calls": 2,
+            "work_hits": 4,
+            "works": 2
+          },
+          "phase": "integer_only_policy",
+          "producer_calls": 0,
+          "requests": [
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "4488afc4ec95f98e6aa6a905c5ef7ca334c6ab47429c7c29ea687d151f2e8204"
+            },
+            {
+              "generation_reused": true,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": true,
+              "work_key": "6b74e611ff8901954ce47d30d1f3771d983c3d3ea0f2506c900f06601accb67a"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "830bd2c56514b169c049247e96244ba529f9b2ef4eb7b23ac7c36d8746804050",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "producer",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "493b3fdf007c2a037323ff924a7b3492b6131f4f254142815a771f12f2151b24",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": {
+            "attempts_failed": 0,
+            "attempts_interrupted": 0,
+            "attempts_running": 0,
+            "attempts_total": 4,
+            "judgement_hits": 0,
+            "judgements": 6,
+            "producer_calls": 2,
+            "verifier_calls": 2,
+            "work_hits": 0,
+            "works": 4
+          },
+          "phase": "producer_implementation_change",
+          "producer_calls": 2,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "206ca3122cdb9737fecffe2f0f50756a26265835b6ede7292488701f54949cb4"
+            },
+            {
+              "generation_reused": false,
+              "request": "rational",
+              "status": "rejected",
+              "verification_reused": false,
+              "work_key": "e71bf20f28fbcf66987fd917bf0ec5ac68b05729f165bd9cf01354e814f49dd1"
+            }
+          ],
+          "verifier_calls": 2
+        },
+        {
+          "callback_events": [
+            {
+              "callback": "producer",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            },
+            {
+              "callback": "verifier",
+              "input_digest": "0b2791c4bea23210f4bcf415e86be1687347eb19aa729561cf1bbaa68b5e5724",
+              "stage": "linear.solve"
+            }
+          ],
+          "engine_stats": {
+            "attempts_failed": 0,
+            "attempts_interrupted": 0,
+            "attempts_running": 0,
+            "attempts_total": 5,
+            "judgement_hits": 2,
+            "judgements": 7,
+            "producer_calls": 1,
+            "verifier_calls": 1,
+            "work_hits": 2,
+            "works": 5
+          },
+          "phase": "changed_equation_input",
+          "producer_calls": 1,
+          "requests": [
+            {
+              "generation_reused": false,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 3
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "changed_input",
+              "status": "accepted",
+              "verification_reused": false,
+              "work_key": "1863f213d5d2f4d38e6b68ff0d109ca757b57cf8532702a1eb37fd2588b3a07a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 3
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "changed_input",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "1863f213d5d2f4d38e6b68ff0d109ca757b57cf8532702a1eb37fd2588b3a07a"
+            },
+            {
+              "generation_reused": true,
+              "output": {
+                "solution": [
+                  {
+                    "denominator": 1,
+                    "numerator": 2
+                  },
+                  {
+                    "denominator": 1,
+                    "numerator": 1
+                  }
+                ]
+              },
+              "request": "integer",
+              "status": "accepted",
+              "verification_reused": true,
+              "work_key": "206ca3122cdb9737fecffe2f0f50756a26265835b6ede7292488701f54949cb4"
+            }
+          ],
+          "verifier_calls": 1
+        }
+      ],
+      "processes_started": 5,
+      "producer_calls": 5,
+      "verifier_calls": 7
+    }
+  },
+  "workload": [
+    {
+      "changed_producer": false,
+      "integer_only": false,
+      "phase": "initial_duplicates",
+      "requests": [
+        "integer",
+        "integer",
+        "rational",
+        "rational",
+        "integer"
+      ]
+    },
+    {
+      "changed_producer": false,
+      "integer_only": false,
+      "phase": "process_restart",
+      "requests": [
+        "integer",
+        "rational"
+      ]
+    },
+    {
+      "changed_producer": false,
+      "integer_only": true,
+      "phase": "integer_only_policy",
+      "requests": [
+        "integer",
+        "rational",
+        "integer",
+        "rational"
+      ]
+    },
+    {
+      "changed_producer": true,
+      "integer_only": true,
+      "phase": "producer_implementation_change",
+      "requests": [
+        "integer",
+        "rational"
+      ]
+    },
+    {
+      "changed_producer": true,
+      "integer_only": true,
+      "phase": "changed_equation_input",
+      "requests": [
+        "changed_input",
+        "changed_input",
+        "integer"
+      ]
+    }
+  ]
+}
