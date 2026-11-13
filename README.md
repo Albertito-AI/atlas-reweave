@@ -123,6 +123,19 @@ cannot supply a module, shell command, file path or callback to execute.
 
 See [MCP setup and actual interoperability checks](docs/MCP.md).
 
+## Integration example: local evidence replay
+
+[Evidence Replay in Colibri Atlas](https://github.com/Albertito-AI/colibri-atlas/tree/main/examples/atlas_evidence), public prototype **0.1.0a1**,
+checks candidate quotations against supplied source snapshots. Its optional
+Reweave adapter rechecks a saved capture under changed sources or quotation rules
+and blocks dependent report export when the evidence is rejected. It also exports
+a RegNav Source Watch manifest with automated relations labelled `context`.
+
+The [validation record](https://github.com/Albertito-AI/colibri-atlas/blob/main/examples/atlas_evidence/VALIDATION.md) reports **48 tests passed, zero skips**,
+including Colibri's actual HTTP gateway with a scripted engine double.
+Real-model quality remains untested. Matching a quotation establishes literal
+agreement with supplied text, not semantic support for the candidate claim.
+
 ## Evidence and boundaries
 
 The [benchmark](docs/BENCHMARK.md) compares actual producer and verifier calls on
