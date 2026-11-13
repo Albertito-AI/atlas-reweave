@@ -1,0 +1,25 @@
+{
+  "title": "Atlas Reweave: durable computation with versioned acceptance",
+  "description": "A local Python execution library separating immutable computation from versioned acceptance, with dependency revalidation, bounded streaming, durable producer-attempt accounting and an optional MCP interface. This deposit preserves a dated source snapshot of an experimental implementation. Deterministic examples and benchmarks do not establish model learning or independent scientific validation.",
+  "creators": [
+    {
+      "name": "Tan, Sin Hon Albert",
+      "orcid": "0009-0001-8996-7933"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "research software",
+    "reproducibility",
+    "agent workflows"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Albertito-AI/atlas-reweave",
+      "relation": "isSupplementTo"
+    }
+  ],
+  "notes": "Cite the version and immutable source revision actually used. This archival deposit does not assert peer review or production readiness. Existing source licences and third-party notices remain applicable."
+}
