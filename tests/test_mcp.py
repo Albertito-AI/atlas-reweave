@@ -67,6 +67,33 @@ class MCPStdioTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(result.is_error, result.content)
         return result.structured_content
 
+    async def test_explicit_tool_annotations_survive_both_stdio_protocols(self):
+        import anyio
+        # Check the real tools/list response, including explicit presence. Using
+        # exclude_unset prevents SDK defaults from concealing an omitted hint.
+        hint_names = ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint")
+        expected = {
+            "list_stages": (True, False, True, False),
+            "run_registered_stage": (False, False, False, True),
+            "recheck_work": (False, False, False, True),
+            "inspect_receipt": (True, False, True, False),
+        }
+        for mode in ("auto", "legacy"):
+            with self.subTest(mode=mode), anyio.fail_after(20):
+                async with self.client(mode=mode) as client:
+                    response = (await client.list_tools()).model_dump(
+                        mode="json", by_alias=True, exclude_unset=True,
+                    )
+                    tools = {tool["name"]: tool for tool in response["tools"]}
+                    self.assertEqual(set(tools), _TOOLS)
+                    for name, values in expected.items():
+                        with self.subTest(tool=name):
+                            annotations = tools[name].get("annotations", {})
+                            self.assertTrue(set(hint_names).issubset(annotations), annotations)
+                            for hint in hint_names:
+                                self.assertIs(type(annotations[hint]), bool, (name, hint))
+                            self.assertEqual(tuple(annotations[hint] for hint in hint_names), values)
+
     async def test_auto_protocol_duplicate_restart_and_current_parent_gate(self):
         import anyio
         with anyio.fail_after(30):

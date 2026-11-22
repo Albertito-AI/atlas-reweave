@@ -48,6 +48,20 @@ identity manifest. Source snapshots may contain confidential or copyrighted
 material; sharing a bundle is a separate data-disclosure decision. The included
 source excerpt fixture uses invented text and proves only literal consistency.
 
+## External assessments and access
+
+A third-party directory entry does not establish maintainer approval or an
+independent security audit. Treat a scanner's findings as claims about its
+inspected snapshot and check them against the source and reproducible behaviour.
+The [MCP annotation evidence](evidence/mcp-tool-annotations.json), for example,
+records protocol metadata without claiming that hints enforce callback safety.
+
+An unsolicited listing does not authorise app installation, repository access or
+publication of an ownership challenge. Assess an integration's exact permissions,
+repository scope, data handling, terms and practical benefit before connecting
+it. Public discovery requires no disclosure of private work stores, credentials
+or unpublished research.
+
 ## Reporting
 
 Use the repository's private vulnerability-reporting facility if it is available

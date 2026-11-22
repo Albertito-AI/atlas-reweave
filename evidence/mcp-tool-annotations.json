@@ -1,0 +1,140 @@
+{
+  "schema": "reweave.mcp-tool-annotations.v1",
+  "observed_at_utc": "2026-11-22T07:04:05+00:00",
+  "purpose": "Record explicit tool hints returned by the installed optional MCP adapter to a real local stdio client.",
+  "source": {
+    "repository": "https://github.com/Albertito-AI/atlas-reweave",
+    "runtime_commit": "16cad56a2e9320c03cf3446c8905e39ee049a1b7",
+    "runtime_file": "src/reweave/mcp_server.py",
+    "runtime_file_sha256": "8cd249a1a5ad915a3be4426397b207cf77cb5bfacf69e0876f35c0f7e5cb7d97",
+    "installed_runtime_matches_source": true
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "Linux",
+    "machine": "x86_64",
+    "versions": {
+      "atlas-reweave": "0.1.0a1",
+      "mcp": "2.3.0",
+      "mcp-types": "2.3.0",
+      "pydantic": "2.14.4",
+      "anyio": "4.16.0"
+    },
+    "fresh_virtual_environment": true,
+    "installed_package_outside_checkout": true,
+    "source_pythonpath_removed": true
+  },
+  "method": {
+    "server_command": "python -m reweave.mcp_server --store <temporary-local-store> --scope annotation-evidence",
+    "transport": "stdio",
+    "client_api": "mcp.Client.list_tools",
+    "serialization": "model_dump(mode=\"json\", by_alias=True, exclude_unset=True)",
+    "representation": "SDK-parsed tools/list responses projected to tool names and annotations; not a raw byte transcript.",
+    "fixture_only": true,
+    "model_calls": 0,
+    "regression_test": "tests/test_mcp.py::MCPStdioTests.test_explicit_tool_annotations_survive_both_stdio_protocols",
+    "test_command": "python -m unittest discover -s <checkout>/tests -p test_mcp.py -v"
+  },
+  "observations": [
+    {
+      "client_mode": "auto",
+      "negotiated_protocol": "2026-07-28",
+      "tools": [
+        {
+          "name": "list_stages",
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "run_registered_stage",
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "recheck_work",
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "inspect_receipt",
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    },
+    {
+      "client_mode": "legacy",
+      "negotiated_protocol": "2025-11-25",
+      "tools": [
+        {
+          "name": "list_stages",
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "run_registered_stage",
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "recheck_work",
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "inspect_receipt",
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    }
+  ],
+  "result": {
+    "tools_checked_per_protocol": 4,
+    "explicit_boolean_hints_per_tool": 4,
+    "all_expected_hints_observed": true,
+    "mcp_test_suite": {
+      "tests_passed": 4,
+      "tests_skipped": 0
+    },
+    "pip_check": "No broken requirements found."
+  },
+  "limits": [
+    "This is a maintainer-side reproduction, not an independent security audit or publisher verification.",
+    "The output verifies annotation presence and values, not enforcement of the declared behaviour.",
+    "The adapter uses conservative open-world hints for tools that may invoke operator-supplied trusted callbacks.",
+    "This record does not establish that an external scanner has corrected its finding or rescanned the repository."
+  ]
+}

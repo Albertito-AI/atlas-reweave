@@ -122,6 +122,9 @@ data. Operator-selected factories are configured at server startup; tool calls
 cannot supply a module, shell command, file path or callback to execute.
 
 See [MCP setup and actual interoperability checks](docs/MCP.md).
+The [tool annotation evidence](evidence/mcp-tool-annotations.json) records all
+four explicit hints for every tool, observed through both supported protocol
+modes using the pinned SDK. These are metadata checks, not a security audit.
 
 ## Integration example: local evidence replay
 

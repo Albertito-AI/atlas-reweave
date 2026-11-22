@@ -38,6 +38,32 @@ aggregate is blocked if one of its parents is now rejected.
 | `recheck_work` | `{"request": {"work_key": "<64 lowercase hex characters>"}}` | A current receipt for stored work and its dependency closure; may write judgements |
 | `inspect_receipt` | `{"request": {"work_key": "<64 lowercase hex characters>"}}` | Historical metadata only, with `current_acceptance: "not_evaluated"`; no output, revalidation or write |
 
+### Explicit tool annotations
+
+Each tool declares all four Boolean hints. The SDK's Python field names are
+snake_case; clients receive the protocol's camelCase names:
+
+| Tool | `readOnlyHint` | `destructiveHint` | `idempotentHint` | `openWorldHint` |
+| --- | --- | --- | --- | --- |
+| `list_stages` | `true` | `false` | `true` | `false` |
+| `run_registered_stage` | `false` | `false` | `false` | `true` |
+| `recheck_work` | `false` | `false` | `false` | `true` |
+| `inspect_receipt` | `true` | `false` | `true` | `false` |
+
+The [annotation evidence record](../evidence/mcp-tool-annotations.json) captures
+the hints returned to a real stdio client using the supported `mcp==2.3.0`
+installation on 22 November 2026. Both automatic and legacy protocol negotiation
+returned every field explicitly. The record identifies the source snapshot,
+adapter hash, environment and limits of the observation.
+
+The regression in `tests/test_mcp.py` checks presence, Boolean types and values
+through the installed server's `tools/list` response. It excludes unset fields
+when serialising the SDK-parsed response, so SDK defaults cannot conceal a missing
+hint. Reproduce it with the [installed-package workflow](../.github/workflows/verify.yml).
+This verifies published metadata; hints do not enforce callback behaviour or
+constitute a security audit. A source scanner's claim that hints are absent
+should be checked against actual protocol output before changing runtime code.
+
 The substantive request models forbid extra fields. Stage names are resolved
 against the fixed registry. Parents are ordered, unique work keys, subject to
 the Engine's parent-count limit. The registry's producers still validate their
@@ -131,7 +157,8 @@ Keep the stdio process within the operator's intended local trust boundary.
 `tests/test_mcp.py` launches the installed module from a temporary directory,
 discovers the four tools, checks duplicate reuse and errors, then restarts the
 process against the same store to exercise policy rejection of a cached child.
-It also exercises the legacy protocol. The test skips only if the optional SDK is
+It also checks explicit tool hints in automatic and legacy protocol modes. The
+adapter tests skip only if the optional SDK is
 absent; an installed unsupported SDK version fails explicitly.
 
 The API was checked against official SDK tag `v2.3.0`, commit
