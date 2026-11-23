@@ -1,0 +1,113 @@
+name: Verify and publish MCP bundle
+
+on:
+  pull_request:
+    paths:
+      - 'mcp/**'
+      - 'scripts/**'
+      - 'src/reweave/**'
+      - 'docs/MCP.md'
+      - 'SECURITY.md'
+      - 'LICENSE'
+      - '.github/workflows/mcp-registry.yml'
+  push:
+    branches: [main]
+    paths: ['mcp/release-request.json']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reweave-registry-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: MCPB / reproducible package and real stdio
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - name: Install fixed build tooling
+        run: |
+          python -m pip install --disable-pip-version-check uv==0.13.9
+          npm install --prefix "$RUNNER_TEMP/mcpb-tool" --ignore-scripts @anthropic-ai/mcpb@2.1.2
+      - name: Validate manifest and frozen runtime
+        run: |
+          "$RUNNER_TEMP/mcpb-tool/node_modules/.bin/mcpb" validate mcp/manifest.json
+          uv lock --check --project mcp
+          uv sync --frozen --project mcp
+      - name: Build reviewed bundle and test outside checkout
+        run: |
+          python scripts/package_mcpb.py --output "$RUNNER_TEMP/reweave-mcp-dist"
+          uv run --frozen --project mcp python scripts/check_mcpb.py --dist "$RUNNER_TEMP/reweave-mcp-dist"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reweave-mcp-bundle
+          path: ${{ runner.temp }}/reweave-mcp-dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish reviewed alpha via GitHub OIDC
+    needs: verify
+    if: github.repository == 'Albertito-AI/atlas-reweave' && github.ref == 'refs/heads/main' && github.ref_protected && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: reweave-mcp-bundle
+          path: ${{ runner.temp }}/reweave-mcp-dist
+      - name: Install pinned official Registry publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error https://github.com/modelcontextprotocol/registry/releases/download/v1.8.8/mcp-publisher_linux_amd64.tar.gz --output "$RUNNER_TEMP/mcp-publisher.tar.gz"
+          printf '%s  %s\n' '09f1fa70ee146b640584274a1a6b2b8a0310b05d4321fa9224e6df6a016d67f4' "$RUNNER_TEMP/mcp-publisher.tar.gz" | sha256sum --check -
+          tar -xzf "$RUNNER_TEMP/mcp-publisher.tar.gz" -C "$RUNNER_TEMP" mcp-publisher
+          "$RUNNER_TEMP/mcp-publisher" validate "$RUNNER_TEMP/reweave-mcp-dist/server.json"
+      - name: Publish exact new GitHub release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish_mcpb_release.py --dist "$RUNNER_TEMP/reweave-mcp-dist"
+      - name: Publish missing Registry version and verify its exact metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          status=0
+          python scripts/check_registry.py "$RUNNER_TEMP/reweave-mcp-dist/server.json" || status=$?
+          if [ "$status" -eq 2 ]; then
+            cd "$RUNNER_TEMP/reweave-mcp-dist"
+            "$RUNNER_TEMP/mcp-publisher" login github-oidc --registry https://registry.modelcontextprotocol.io
+            "$RUNNER_TEMP/mcp-publisher" publish server.json
+          elif [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          cd "$GITHUB_WORKSPACE"
+          python scripts/check_registry.py "$RUNNER_TEMP/reweave-mcp-dist/server.json"
+      - name: Remove ephemeral Registry credentials
+        if: always()
+        working-directory: ${{ runner.temp }}/reweave-mcp-dist
+        run: |
+          if [ -x "$RUNNER_TEMP/mcp-publisher" ]; then
+            "$RUNNER_TEMP/mcp-publisher" logout
+          fi
