@@ -1,0 +1,58 @@
+{
+  "manifest_version": "0.4",
+  "name": "atlas-reweave",
+  "display_name": "Atlas Reweave: Albert Tan Sin Hon",
+  "version": "0.1.0-alpha.1",
+  "description": "Durable local computation receipts with versioned acceptance for trusted agent callbacks.",
+  "long_description": "Four local stdio tools over an operator-selected SQLite store. Two tools read metadata; two can generate fixture work or write acceptance judgements. The supplied stages are deterministic software examples. No model account, API key, hosted service or network tool is provided. The bundle packages source version 0.1.0a1 and locked MCP 2.3.0 dependencies through UV. Desktop client interfaces have not been independently tested.",
+  "author": {
+    "name": "Albert Tan Sin Hon",
+    "email": "info@alberttansinhon.com",
+    "url": "https://alberttansinhon.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Albertito-AI/atlas-reweave"
+  },
+  "homepage": "https://alberttansinhon.com/#research-lab",
+  "documentation": "https://github.com/Albertito-AI/atlas-reweave/blob/main/mcp/README.md",
+  "support": "https://alberttansinhon.com/#contact",
+  "server": {
+    "type": "uv",
+    "entry_point": "server.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "run", "--frozen", "--directory", "${__dirname}", "server.py",
+        "--store", "${user_config.store_directory}/reweave.sqlite3",
+        "--scope", "${user_config.scope}"
+      ]
+    }
+  },
+  "compatibility": {
+    "runtimes": {"python": ">=3.12 <3.13"}
+  },
+  "user_config": {
+    "store_directory": {
+      "type": "directory",
+      "title": "Local work directory",
+      "description": "Choose an existing trusted local directory for reweave.sqlite3 and its ownership sidecar. Each running server needs its own store.",
+      "required": true
+    },
+    "scope": {
+      "type": "string",
+      "title": "Work scope",
+      "description": "A fixed label separating this server's work identities. Keep it unchanged when reopening the same work.",
+      "default": "mcp-local",
+      "required": false
+    }
+  },
+  "tools": [
+    {"name": "list_stages", "description": "Read the registered fixture stages and their revisions."},
+    {"name": "run_registered_stage", "description": "Run a trusted registered stage and persist its receipt or judgement."},
+    {"name": "recheck_work", "description": "Revalidate stored work and parents; may write a judgement."},
+    {"name": "inspect_receipt", "description": "Read historical receipt metadata without claiming current acceptance."}
+  ],
+  "keywords": ["agents", "local", "receipts", "provenance", "verification", "workflow"],
+  "license": "MIT"
+}

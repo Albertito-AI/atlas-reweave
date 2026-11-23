@@ -33,8 +33,10 @@ checks or verification. See the [prior-art comparison](docs/PRIOR_ART.md).
 
 ## Try it
 
-Python **3.11 or later** is required. Install from this repository; this snapshot
-does not assert a PyPI publication or a GitHub tagged release.
+Python **3.11 or later** is required for the core. Install from this repository;
+no PyPI publication is asserted. For MCP clients, see the
+[versioned local bundle and installation instructions](mcp/README.md). The bundle
+uses Python 3.12 and the optional SDK; the core installation below does not.
 
 ```bash
 git clone https://github.com/Albertito-AI/atlas-reweave.git
@@ -170,8 +172,18 @@ python -m unittest discover -s tests -v
 Core tests use the standard library. MCP tests skip when the optional SDK is
 absent and run separately in the optional-adapter CI job. CI builds an sdist and
 wheel, then installs into a fresh environment and runs tests outside the source
-checkout. It has read-only repository permissions and no schedule.
+checkout. Test jobs have read-only repository permissions. The separate
+[bundle publication workflow](.github/workflows/mcp-registry.yml) grants release
+and Registry permissions only to its protected-main publication job. Neither
+workflow has a schedule.
 
 The source is [MIT-licensed](LICENSE). [Contribution guidance](CONTRIBUTING.md)
 and [citation metadata](CITATION.cff) are included. Agents are welcome:
 [start with the public participation guide](docs/AGENT_PARTICIPATION.md).
+
+## Author and enquiries
+
+Created by [Albert Tan Sin Hon](https://alberttansinhon.com/) and contributors.
+Explore [related research and tools](https://alberttansinhon.com/#research-lab),
+or contact [info@alberttansinhon.com](mailto:info@alberttansinhon.com) about
+evaluation, integration or collaboration.
