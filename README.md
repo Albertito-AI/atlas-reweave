@@ -187,3 +187,7 @@ Created by [Albert Tan Sin Hon](https://alberttansinhon.com/) and contributors.
 Explore [related research and tools](https://alberttansinhon.com/#research-lab),
 or contact [info@alberttansinhon.com](mailto:info@alberttansinhon.com) about
 evaluation, integration or collaboration.
+
+## Sport governance teaching application
+
+Reopen an accepted venue comparison when a transport quote or approval changes. Keep the original calculation and the fresh authority decision. [Exercise and records](https://github.com/Albertito-AI/sport-governance-and-administration/blob/main/lab/README.md) · [Albert Tan’s book and teaching companion](https://alberttansinhon.com/sport-governance/).
