@@ -1,7 +1,7 @@
 # Optional MCP adapter
 
 The adapter exposes four narrow operations over stdio. It uses one long-lived
-Engine, a fixed stage registry and an operator-selected local SQLite store.
+Engine, a fixed stage registry and an operator-selected local SQLite store. Use separate `--store` paths for concurrent server processes.
 It does not call a model or expose shell execution, arbitrary imports, a database
 path selector or a way to change acceptance policy through a tool call.
 
